@@ -1,6 +1,6 @@
 /** Spear Aegros shared public API surface. */
 
-export const AEGROS_CORE_VERSION = '0.1.0-beta.0';
+export const AEGROS_CORE_VERSION = '0.1.0-beta.1';
 
 export type { JobStatus, JobSummary } from './job-types.js';
 export { normalizeDomainLabel, normalizeDomainsToScope } from './domains.js';

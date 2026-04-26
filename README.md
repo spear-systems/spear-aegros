@@ -93,7 +93,7 @@ npm run pack:dry
 
 ## Published package
 
-End users: **`npm i -g @spearsystems/aegros@beta`** — see [packages/aegros/README.md](packages/aegros/README.md) and [docs/usage/installation.md](docs/usage/installation.md).
+End users: **`npm i -g @spearsystems/aegros@beta`** — see [packages/aegros/README.md](packages/aegros/README.md) and **[docs/usage/install-from-npm.md](docs/usage/install-from-npm.md)** (full install guide).
 
 ## Monorepo layout
 

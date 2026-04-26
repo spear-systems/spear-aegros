@@ -1,5 +1,7 @@
 # Operator portal
 
+New installs: **[Install from npm — section 8 (first job from the portal)](./install-from-npm.md#8-first-job-from-the-portal)**.
+
 ## Where it is served
 
 - When using **`aegros-server`**: open **`http://<host>:<port>/portal/`** (trailing slash recommended).

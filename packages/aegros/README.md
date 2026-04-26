@@ -6,15 +6,27 @@ Proprietary software © Spear Systems. See bundled **`LICENSE`**.
 
 ## Documentation
 
-- **Install & run (users):** [docs/usage/README.md](../../docs/usage/README.md) — requirements, installation, **full configuration**, CLI, portal, API.
-- **Build & publish (Spear):** [docs/development/README.md](../../docs/development/README.md) — GitHub, npm, pre-publish testing.
+Usage and development guides live in the repo on GitHub (absolute links):
+
+**Usage (operators)**
+
+- [Install and run from npm (complete guide)](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/install-from-npm.md)
+- [Usage docs index](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/README.md)
+- [Configuration](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/configuration.md)
+- [CLI reference](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/cli.md)
+- [Portal](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/portal.md)
+- [HTTP API overview](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/api-overview.md)
+
+**Development (maintainers)**
+
+- [Development docs index](https://github.com/spear-systems/spear-aegros/blob/main/docs/development/README.md)
 
 ## Install
 
 ```bash
 npm install -g @spearsystems/aegros@beta
 # or exact:
-npm install -g @spearsystems/aegros@0.1.0-beta.0
+npm install -g @spearsystems/aegros@0.1.0-beta.1
 ```
 
 ## Binaries
@@ -26,10 +38,14 @@ npm install -g @spearsystems/aegros@0.1.0-beta.0
 
 ## Configure the server
 
-**All** runtime settings come from **your** environment (or process manager). See **[docs/usage/configuration.md](../../docs/usage/configuration.md)** for the complete table.
+Follow [Install from npm](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/install-from-npm.md) for `.env` location, `DATABASE_URL`, migrations, and first start.
 
-There is **no** Spear-managed “cloud config” for self-hosted installs. Copy `.env.example` from the GitHub repo if you need a template: [`packages/aegros-server/.env.example`](../../packages/aegros-server/.env.example).
+Runtime settings are **your** environment (or process manager). Full variable list: [Configuration](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/configuration.md).
 
-## Publish notes (maintainers only)
+There is no Spear-managed cloud config for self-hosted installs. Environment template:
 
-See [docs/development/github-and-npm-release.md](../../docs/development/github-and-npm-release.md) and [docs/npm-publish.md](../../docs/npm-publish.md). Run `npm run build` at monorepo root before `npm publish -w @spearsystems/aegros`.
+[`packages/aegros-server/.env.example`](https://github.com/spear-systems/spear-aegros/blob/main/packages/aegros-server/.env.example)
+
+## Publish (maintainers only)
+
+[GitHub & npm release](https://github.com/spear-systems/spear-aegros/blob/main/docs/development/github-and-npm-release.md) · [npm publish](https://github.com/spear-systems/spear-aegros/blob/main/docs/npm-publish.md) — run `npm run build` at the monorepo root before `npm publish -w @spearsystems/aegros`.

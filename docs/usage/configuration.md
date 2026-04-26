@@ -1,5 +1,7 @@
 # Configuration (operators)
 
+If you are installing from npm for the first time, read **[Install from npm (complete guide)](./install-from-npm.md)** first; it explains how `.env` is loaded and which variables matter for a minimal bring-up.
+
 **Operators** — anyone who runs `aegros-server` or the CLI against an API — own **all variables below**. Spear’s npm/GitHub release process does **not** inject these into your environment.
 
 > **Spear maintainers only** (GitHub, npm OIDC, version bumps): [../development/maintainer-config.md](../development/maintainer-config.md)

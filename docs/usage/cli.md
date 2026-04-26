@@ -1,5 +1,7 @@
 # CLI reference (`aegros`)
 
+New installs: **[Install from npm — section 7 (first job from the CLI)](./install-from-npm.md#7-first-job-from-the-cli)**.
+
 ## Global options
 
 | Option            | Description                               |

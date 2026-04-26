@@ -16,7 +16,7 @@ So this repo keeps **`access: "public"`** only under `publishConfig`. You add **
 
 ## Prerelease (first beta)
 
-1. Bump version in **`packages/aegros/package.json`** (e.g. `0.1.0-beta.0`).
+1. Bump version in **`packages/aegros/package.json`** (and align workspace packages + `AEGROS_CORE_VERSION` in `aegros-core` if you version them together; e.g. `0.1.0-beta.1`).
 2. From repo root: `npm run build` (runs workspace builds + umbrella `prepack` bundle).
 3. Inspect tarball: `npm pack -w @spearsystems/aegros` (or `npm run pack:dry` from root).
 4. Publish with a **dist-tag** so `latest` stays stable:

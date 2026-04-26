@@ -1,5 +1,7 @@
 # HTTP API overview
 
+New installs: **[Install from npm](./install-from-npm.md)** (health check and first jobs).
+
 Base path: **`/api`** (global prefix).
 
 ## Authentication
@@ -9,14 +11,14 @@ Base path: **`/api`** (global prefix).
 
 ## Endpoints
 
-| Method | Path                      | Description                                                                          |
-| ------ | ------------------------- | ------------------------------------------------------------------------------------ | ---------- | ------------------------------------------- |
+| Method | Path                      | Description |
+| ------ | ------------------------- | ----------- |
 | `GET`  | `/api/health`             | Liveness; includes `database`, `coreVersion`, `aiProvider`. **Public** (no API key). |
-| `POST` | `/api/v1/jobs`            | Body: `{ "domains": string[], "policy"?: "passive"                                   | "standard" | "aggressive", "ackAuthorized"?: boolean }`. |
-| `GET`  | `/api/v1/jobs`            | List jobs (newest first).                                                            |
-| `GET`  | `/api/v1/jobs/:id`        | Job detail including `report` when complete.                                         |
-| `GET`  | `/api/v1/jobs/:id/sarif`  | SARIF 2.1.0 JSON (`Content-Type: application/sarif+json`).                           |
-| `GET`  | `/api/v1/jobs/:id/events` | **SSE** stream of job status / stages (poll alternative).                            |
+| `POST` | `/api/v1/jobs`            | Body: `{ "domains": string[], "policy"?: "passive" \| "standard" \| "aggressive", "ackAuthorized"?: boolean }`. |
+| `GET`  | `/api/v1/jobs`            | List jobs (newest first). |
+| `GET`  | `/api/v1/jobs/:id`        | Job detail including `report` when complete. |
+| `GET`  | `/api/v1/jobs/:id/sarif`  | SARIF 2.1.0 JSON (`Content-Type: application/sarif+json`). |
+| `GET`  | `/api/v1/jobs/:id/events` | **SSE** stream of job status / stages (poll alternative). |
 
 ## Rate limiting
 

@@ -1,9 +1,26 @@
 {
   "name": "@spearsystems/aegros",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.1",
   "description": "Spear Aegros (beta) — CLI and API server umbrella package. See README before production use.",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
+  "keywords": [
+    "spear",
+    "aegros",
+    "spear-systems",
+    "security",
+    "attack-surface",
+    "external-security",
+    "reconnaissance"
+  ],
+  "homepage": "https://github.com/spear-systems/spear-aegros#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spear-systems/spear-aegros.git"
+  },
+  "bugs": {
+    "url": "https://github.com/spear-systems/spear-aegros/issues"
+  },
   "bin": {
     "aegros": "./bin/aegros.mjs",
     "aegros-server": "./bin/aegros-server.mjs"
