@@ -12,10 +12,10 @@ Before you run any assessment, read **[Legal / safe use](../legal-safe-use.md)**
 
 The package **`@spearsystems/aegros`** is an **umbrella** release. Installing it globally adds two commands to your `PATH`:
 
-| Command         | Role |
-| --------------- | ---- |
+| Command         | Role                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------- |
 | `aegros-server` | Starts the HTTP API (NestJS) and serves the operator **portal** static UI under `/portal/`. |
-| `aegros`        | CLI: `health`, `jobs create`, `jobs get`, `jobs watch`. |
+| `aegros`        | CLI: `health`, `jobs create`, `jobs get`, `jobs watch`.                                     |
 
 The npm tarball contains **pre-built** server and CLI code plus the portal assets. It does **not** ship the Prisma **schema** or **migration SQL** files. You still need those files on disk once so you can create and migrate the database (see [section 4](#4-database-prisma-schema-and-migrations)).
 
@@ -171,24 +171,24 @@ Copy variables from the repo template:
 
 ### Minimum to get a local API listening
 
-| Variable | Notes |
-| -------- | ----- |
+| Variable       | Notes                                                |
+| -------------- | ---------------------------------------------------- |
 | `DATABASE_URL` | Set as in [section 4b](#4b-set-database_url-in-env). |
-| `PORT` | Optional; default **3000**. |
-| `HOST` | Optional; default **0.0.0.0**. |
+| `PORT`         | Optional; default **3000**.                          |
+| `HOST`         | Optional; default **0.0.0.0**.                       |
 
 ### Strongly recommended before exposing the internet
 
-| Variable | Notes |
-| -------- | ----- |
-| `NODE_ENV=production` | Enables production-oriented behavior (e.g. CORS warning if misconfigured). |
-| `CORS_ORIGIN` | Comma-separated allowed browser origins. Do **not** leave `*` for public deployments. |
+| Variable                 | Notes                                                                                                                                                                                                           |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NODE_ENV=production`    | Enables production-oriented behavior (e.g. CORS warning if misconfigured).                                                                                                                                      |
+| `CORS_ORIGIN`            | Comma-separated allowed browser origins. Do **not** leave `*` for public deployments.                                                                                                                           |
 | `API_KEYS_REQUIRED=true` | Require `X-API-Key` / `Bearer` on APIs (except health). Create keys with **`create-api-key.mjs`** (see [section 10](#10-creating-api-keys-in-production)) or your own process — see [runbooks](../runbooks.md). |
 
 ### Artifacts directory
 
-| Variable | Notes |
-| -------- | ----- |
+| Variable               | Notes                                                                                                                                                                |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `AEGROS_ARTIFACTS_DIR` | Defaults to `data/artifacts` **relative to the process cwd**. Set an **absolute path** in production so behavior does not depend on where you start the binary from. |
 
 ### AI (all optional)
@@ -317,15 +317,15 @@ Never commit secrets or run the script where stdout is logged without redaction.
 
 ## 11. Troubleshooting
 
-| Symptom | What to check |
-| ------- | ------------- |
-| `command not found: aegros-server` | Global npm bin not on `PATH`; reinstall with `npm i -g` and follow npm’s PATH instructions for your OS. |
-| Server starts but health shows database errors | `DATABASE_URL` wrong; migrations not applied; file permissions on SQLite path. |
-| `P1001` / connection refused (Postgres) | Network, credentials, TLS mode in URL, firewall. |
-| `.env` ignored | You did not **`cd`** to the directory containing `.env` before `aegros-server`. |
-| CORS errors from the portal | `CORS_ORIGIN` must include the browser origin you use (scheme + host + port). |
-| `401` on API | `API_KEYS_REQUIRED=true` but missing or wrong `X-API-Key` / `Authorization`. |
-| Permission errors on artifacts | Set **`AEGROS_ARTIFACTS_DIR`** to a writable absolute path. |
+| Symptom                                        | What to check                                                                                           |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `command not found: aegros-server`             | Global npm bin not on `PATH`; reinstall with `npm i -g` and follow npm’s PATH instructions for your OS. |
+| Server starts but health shows database errors | `DATABASE_URL` wrong; migrations not applied; file permissions on SQLite path.                          |
+| `P1001` / connection refused (Postgres)        | Network, credentials, TLS mode in URL, firewall.                                                        |
+| `.env` ignored                                 | You did not **`cd`** to the directory containing `.env` before `aegros-server`.                         |
+| CORS errors from the portal                    | `CORS_ORIGIN` must include the browser origin you use (scheme + host + port).                           |
+| `401` on API                                   | `API_KEYS_REQUIRED=true` but missing or wrong `X-API-Key` / `Authorization`.                            |
+| Permission errors on artifacts                 | Set **`AEGROS_ARTIFACTS_DIR`** to a writable absolute path.                                             |
 
 For migrations and API key procedures in production, see **[Runbooks](../runbooks.md)**.
 
@@ -333,11 +333,11 @@ For migrations and API key procedures in production, see **[Runbooks](../runbook
 
 ## 12. Reference index (same usage track)
 
-| Topic | Document |
-| ----- | -------- |
-| Full environment variable table | **[Configuration](./configuration.md)** |
-| CLI flags and `--json` | **[CLI](./cli.md)** |
-| Portal behavior and SARIF in browser | **[Portal](./portal.md)** |
-| HTTP routes, SSE, rate limits | **[API overview](./api-overview.md)** |
+| Topic                                | Document                                |
+| ------------------------------------ | --------------------------------------- |
+| Full environment variable table      | **[Configuration](./configuration.md)** |
+| CLI flags and `--json`               | **[CLI](./cli.md)**                     |
+| Portal behavior and SARIF in browser | **[Portal](./portal.md)**               |
+| HTTP routes, SSE, rate limits        | **[API overview](./api-overview.md)**   |
 
 Spear engineers building or publishing the product should use **[Development](../development/README.md)** instead of this guide.

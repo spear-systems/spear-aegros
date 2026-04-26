@@ -2,9 +2,9 @@
 
 Documentation is split into two tracks:
 
-| Track                                      | Audience                             | Start here                                                                           |
-| ------------------------------------------ | ------------------------------------ | ------------------------------------------------------------------------------------ |
-| **[Development](./development/README.md)** | Spear engineers / maintainers        | Local monorepo, CI, GitHub, npm releases, pre-publish checks, maintainer-only config |
+| Track                                      | Audience                             | Start here                                                                                                        |
+| ------------------------------------------ | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| **[Development](./development/README.md)** | Spear engineers / maintainers        | Local monorepo, CI, GitHub, npm releases, pre-publish checks, maintainer-only config                              |
 | **[Usage](./usage/README.md)**             | Anyone running or integrating Aegros | **[Install from npm](./usage/install-from-npm.md)** (primary), then configuration / CLI / portal / API references |
 
 Supporting material (both tracks may reference):

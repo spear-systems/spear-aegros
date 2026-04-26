@@ -10,12 +10,12 @@ Always read **[Legal / safe use](../legal-safe-use.md)** before running assessme
 
 ## Reference (detail beyond the install guide)
 
-| Document | Use when you need |
-| -------- | ----------------- |
+| Document                            | Use when you need                                     |
+| ----------------------------------- | ----------------------------------------------------- |
 | [Configuration](./configuration.md) | Full table of server and client environment variables |
-| [CLI](./cli.md) | Every `aegros` flag and `--json` behavior |
-| [Portal](./portal.md) | Operator UI at `/portal/`, SARIF in the browser |
-| [API overview](./api-overview.md) | REST routes, auth headers, SSE, rate limits |
+| [CLI](./cli.md)                     | Every `aegros` flag and `--json` behavior             |
+| [Portal](./portal.md)               | Operator UI at `/portal/`, SARIF in the browser       |
+| [API overview](./api-overview.md)   | REST routes, auth headers, SSE, rate limits           |
 
 ## Integrations
 
