@@ -22,7 +22,7 @@
     "@nestjs/core": "^11.1.11",
     "@nestjs/platform-express": "^11.1.11",
     "@nestjs/throttler": "^6.5.0",
-    "@prisma/client": "6.19.0",
+    "@prisma/client": "6.19.3",
     "@spearsystems/aegros-core": "file:../aegros-core",
     "@spearsystems/aegros-portal": "file:../aegros-portal",
     "class-transformer": "^0.5.1",
@@ -33,7 +33,7 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
-    "prisma": "6.19.0",
+    "prisma": "6.19.3",
     "@nestjs/cli": "^11.0.16",
     "@nestjs/schematics": "^11.0.9",
     "@nestjs/testing": "^11.1.11",

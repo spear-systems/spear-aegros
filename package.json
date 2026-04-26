@@ -22,8 +22,8 @@
     "sbom": "cyclonedx-npm --output-file sbom.json --output-format JSON"
   },
   "overrides": {
-    "prisma": "6.19.0",
-    "@prisma/client": "6.19.0"
+    "prisma": "6.19.3",
+    "@prisma/client": "6.19.3"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
