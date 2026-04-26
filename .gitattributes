@@ -1,0 +1,2 @@
+# Consistent LF in the repo and on CI (avoids Prettier format:check failing on windows-latest only).
+* text=auto eol=lf

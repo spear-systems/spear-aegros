@@ -25,18 +25,30 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Vite 8 → rolldown uses platform optionalDependencies; npm ci + workspaces can omit them (Vitest then fails at startup).
-      - name: Ensure Rolldown native binding
+      # Rolldown (Vitest/Vite) and Rollup (Vite build) ship platform optionalDependencies; npm ci + workspaces often omit them.
+      - name: Ensure Rolldown and Rollup native bindings
         shell: bash
         run: |
           set -e
           RVER=$(node -p "require('rolldown/package.json').version")
+          UVER=$(node -p "require('rollup/package.json').version")
           case "${{ runner.os }}" in
-            Linux) npm install "@rolldown/binding-linux-x64-gnu@${RVER}" --no-save ;;
-            Windows) npm install "@rolldown/binding-win32-x64-msvc@${RVER}" --no-save ;;
+            Linux)
+              npm install "@rolldown/binding-linux-x64-gnu@${RVER}" --no-save
+              npm install "@rollup/rollup-linux-x64-gnu@${UVER}" --no-save
+              ;;
+            Windows)
+              npm install "@rolldown/binding-win32-x64-msvc@${RVER}" --no-save
+              npm install "@rollup/rollup-win32-x64-msvc@${UVER}" --no-save
+              ;;
             macOS)
-              if [ "$(uname -m)" = arm64 ]; then npm install "@rolldown/binding-darwin-arm64@${RVER}" --no-save
-              else npm install "@rolldown/binding-darwin-x64@${RVER}" --no-save; fi
+              if [ "$(uname -m)" = arm64 ]; then
+                npm install "@rolldown/binding-darwin-arm64@${RVER}" --no-save
+                npm install "@rollup/rollup-darwin-arm64@${UVER}" --no-save
+              else
+                npm install "@rolldown/binding-darwin-x64@${RVER}" --no-save
+                npm install "@rollup/rollup-darwin-x64@${UVER}" --no-save
+              fi
               ;;
           esac
 
