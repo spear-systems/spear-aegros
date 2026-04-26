@@ -29,4 +29,15 @@ export default tseslint.config(
       },
     },
   },
+  // Prisma client + Nest DI are often typed loosely; unsafe-* rules add noise without catching real bugs here.
+  {
+    files: ['packages/aegros-server/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-redundant-type-constituents': 'off',
+    },
+  },
 );

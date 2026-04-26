@@ -93,7 +93,7 @@ export class JobsService implements OnModuleInit {
       apiKeyId: apiKeyId ?? null,
     });
     void this.runJob(row.id);
-    return this.toRecord(row as JobTableRow);
+    return this.toRecord(row);
   }
 
   async get(id: string): Promise<JobRecord> {
@@ -101,7 +101,7 @@ export class JobsService implements OnModuleInit {
     if (!row) {
       throw new NotFoundException(`Job ${id} not found`);
     }
-    return this.toRecord(row as JobTableRow);
+    return this.toRecord(row);
   }
 
   async list(): Promise<JobRecord[]> {

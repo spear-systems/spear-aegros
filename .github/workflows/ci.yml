@@ -25,6 +25,12 @@ jobs:
       - name: Install
         run: npm ci
 
+      # type-aware ESLint needs built workspace types (exports point at dist/) and generated Prisma client
+      - name: Prepare for lint (core dist + Prisma client)
+        run: npm run build -w @spearsystems/aegros-core && npm run db:generate -w @spearsystems/aegros-server
+        env:
+          DATABASE_URL: file:./packages/aegros-server/prisma/ci-placeholder.db
+
       - name: Lint
         run: npm run lint
 
