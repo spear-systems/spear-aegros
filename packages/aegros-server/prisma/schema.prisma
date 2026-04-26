@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Job {
+  id           String   @id @default(uuid())
+  status       String
+  domainsJson  String
+  policy       String   @default("passive")
+  reportJson   String?
+  currentStage String?
+  stagesJson   String?
+  errorMessage String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  auditLogs AuditLog[]
+}
+
+model ApiKey {
+  id         String    @id @default(uuid())
+  name       String
+  keyHash    String    @unique
+  role       String    @default("operator")
+  createdAt  DateTime  @default(now())
+  revokedAt  DateTime?
+
+  auditLogs AuditLog[]
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  action     String
+  resource   String
+  metaJson   String?
+  jobId      String?
+  apiKeyId   String?
+  job        Job?     @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  apiKey     ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+}
+
+model WebhookSubscription {
+  id         String   @id @default(uuid())
+  url        String
+  secret     String
+  eventsJson String
+  createdAt  DateTime @default(now())
+  revokedAt  DateTime?
+}

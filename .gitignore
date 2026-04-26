@@ -1,0 +1,22 @@
+node_modules/
+dist/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
+packages/aegros/bundled/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Cursor: ignore local plan files; keep .cursor/rules, .cursor/skills, etc. tracked
+.cursor/plans/
+packages/aegros-server/prisma/*.db
+packages/aegros-server/prisma/*.db-journal
+data/
+sbom.json

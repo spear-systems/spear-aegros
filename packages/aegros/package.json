@@ -1,0 +1,27 @@
+{
+  "name": "@spearsystems/aegros",
+  "version": "0.1.0-beta.0",
+  "description": "Spear Aegros (beta) — CLI and API server umbrella package. See README before production use.",
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "bin": {
+    "aegros": "./bin/aegros.mjs",
+    "aegros-server": "./bin/aegros-server.mjs"
+  },
+  "files": [
+    "bin",
+    "bundled",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node ./scripts/prepack.mjs",
+    "prepack": "node ./scripts/prepack.mjs",
+    "clean": "node -e \"import fs from 'node:fs'; fs.rmSync('bundled',{recursive:true,force:true})\""
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

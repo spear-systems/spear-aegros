@@ -1,0 +1,52 @@
+/**
+ * Spear Aegros portal — design tokens (see docs/design/portal.md).
+ * Spacing: only 4,8,12,16,20,24,32,36,64,72,84 (px). MDIO role: IBM Plex Mono (Google Fonts).
+ */
+:root {
+  --color-charcoal: #181717;
+  --color-dark-gray: #2e2d2d;
+  --color-purple: #995fc3;
+  --color-purple-hover: #8b4daf;
+  --color-purple-active: #7a3e9e;
+  --color-teal: #09825d;
+  --color-blue: #5a82de;
+  --color-blue-active: #4b70cc;
+  --color-blue-light: #85aaf5;
+  --color-blue-muted: #adc7fc;
+  --color-blue-pale: #cedefd;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-off-white: #f9f7f6;
+  --color-off-white-2: #f7f5f4;
+  --color-light-gray: #eeebea;
+  --color-error: #d04841;
+  --color-nav-bg: #a9a9a9;
+
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-36: 36px;
+  --space-64: 64px;
+  --space-72: 72px;
+  --space-84: 84px;
+
+  --radius-0: 0;
+  --radius-8: 8px;
+  --radius-16: 16px;
+  --radius-pill: 9999px;
+
+  --shadow-md: rgba(24, 23, 23, 0.02) 0px 4px 8px 0px;
+  --shadow-lg: rgba(7, 26, 36, 0.24) 0px 3px 10px 1px;
+  --shadow-xl: rgba(24, 23, 23, 0.16) 0px 4px 16px 0px;
+
+  --nav-height: 72px;
+  --content-max: 1400px;
+}

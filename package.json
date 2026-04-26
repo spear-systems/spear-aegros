@@ -1,0 +1,38 @@
+{
+  "name": "spear-aegros",
+  "private": true,
+  "description": "Spear Aegros — monorepo (core, portal, server, cli, umbrella)",
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "node": ">=20.19.0 <27",
+    "npm": ">=10"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @spearsystems/aegros-core && npm run build -w @spearsystems/aegros-portal && npm run build -w @spearsystems/aegros-server && npm run build -w @spearsystems/aegros-cli && npm run build -w @spearsystems/aegros",
+    "clean": "npm run clean --workspaces --if-present",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "pack:dry": "npm pack -w @spearsystems/aegros",
+    "sbom": "cyclonedx-npm --output-file sbom.json --output-format JSON"
+  },
+  "overrides": {
+    "prisma": "6.19.0",
+    "@prisma/client": "6.19.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.8",
+    "@cyclonedx/cyclonedx-npm": "^4.2.1",
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.7.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.1"
+  }
+}
