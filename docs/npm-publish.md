@@ -4,6 +4,16 @@
 
 **Maintainer workflow** (clone, test, GitHub, first publish): [development/github-and-npm-release.md](./development/github-and-npm-release.md) and [development/testing-before-publish.md](./development/testing-before-publish.md).
 
+## Why `publishConfig.provenance` is not set in `package.json`
+
+npm **Sigstore provenance** is generated only when npm can see a **supported CI provider** (e.g. GitHub Actions) and OIDC. If `"provenance": true` sits in `publishConfig`, **`npm publish` from your laptop** fails with:
+
+```text
+npm error Automatic provenance generation not supported for provider: null
+```
+
+So this repo keeps **`access: "public"`** only under `publishConfig`. You add **`--provenance` on the CI job** that publishes (see below).
+
 ## Prerelease (first beta)
 
 1. Bump version in **`packages/aegros/package.json`** (e.g. `0.1.0-beta.0`).
@@ -17,15 +27,35 @@ npm publish -w @spearsystems/aegros --tag beta
 
 5. Consumers: `npm i -g @spearsystems/aegros@beta` (or exact version).
 
-## Provenance
+## Industry-standard setup (recommended)
 
-- `packages/aegros` sets `"provenance": true` under `publishConfig`.
-- Configure **trusted publishing** on npmjs.com for this package + GitHub repo (OIDC). Follow npm’s official “Connecting a repository” documentation.
+| Piece                                  | Purpose                                                                                                                                                |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Trusted publishing (OIDC)**          | Link the GitHub repo to `@spearsystems/aegros` on npm so CI can publish **without** a long-lived `NPM_TOKEN`. Configure in npmjs.com package settings. |
+| **Publish from GitHub Actions only**   | Reproducible builds, audit trail, provenance tied to a commit.                                                                                         |
+| **`npm publish … --provenance` in CI** | Attestation that the tarball was built on that workflow run.                                                                                           |
 
-## Manual publish (fallback)
+Typical CI step (after `npm ci` + `npm run build`):
 
-- `npm login` (2FA required on publisher account).
-- `npm publish -w @spearsystems/aegros` after `npm run build`.
+```bash
+npm publish -w @spearsystems/aegros --tag beta --provenance
+```
+
+Workflow needs at least:
+
+```yaml
+permissions:
+  id-token: write
+  contents: read
+```
+
+Follow npm’s current **“Trusted publishers” / OIDC** docs for the exact `actions/setup-node` + registry pairing for your npm account.
+
+## Manual publish from your machine (fallback)
+
+- `npm login` (2FA on the publisher account).
+- `npm publish -w @spearsystems/aegros --tag beta` after `npm run build`.
+- **No** automatic provenance on local publishes (by design). Prefer moving publishes to CI once OIDC is configured.
 
 ## Post-publish smoke
 

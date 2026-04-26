@@ -21,7 +21,6 @@
     "clean": "node -e \"import fs from 'node:fs'; fs.rmSync('bundled',{recursive:true,force:true})\""
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   }
 }
