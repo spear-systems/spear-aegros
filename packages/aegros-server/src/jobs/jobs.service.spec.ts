@@ -6,6 +6,7 @@ import { AuditModule } from '../audit/audit.module';
 import { DockerModule } from '../docker/docker.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { WebhooksModule } from '../webhooks/webhooks.module';
+import { WebhooksService } from '../webhooks/webhooks.service';
 import { JobsModule } from './jobs.module';
 import { JobsService } from './jobs.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -13,7 +14,7 @@ import { PrismaService } from '../prisma/prisma.service';
 describe('JobsService', () => {
   let prisma: PrismaService;
   let jobs: JobsService;
-  let close: () => Promise<void>;
+  let close: (() => Promise<void>) | undefined;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -26,7 +27,12 @@ describe('JobsService', () => {
         AiModule,
         JobsModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(WebhooksService)
+      .useValue({
+        notifyJobCompleted: async () => {},
+      })
+      .compile();
     const app = moduleRef.createNestApplication();
     await app.init();
     close = () => app.close();
@@ -35,8 +41,9 @@ describe('JobsService', () => {
   });
 
   afterAll(async () => {
-    await prisma.$disconnect();
-    await close();
+    // void runJob() may still finish audit work; app.close() runs Prisma $disconnect via OnModuleDestroy.
+    await new Promise((r) => setTimeout(r, 300));
+    await close?.();
   });
 
   it('creates a job and completes pipeline', async () => {
