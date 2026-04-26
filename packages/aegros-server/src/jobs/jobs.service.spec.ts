@@ -9,10 +9,8 @@ import { WebhooksModule } from '../webhooks/webhooks.module';
 import { WebhooksService } from '../webhooks/webhooks.service';
 import { JobsModule } from './jobs.module';
 import { JobsService } from './jobs.service';
-import { PrismaService } from '../prisma/prisma.service';
 
 describe('JobsService', () => {
-  let prisma: PrismaService;
   let jobs: JobsService;
   let close: (() => Promise<void>) | undefined;
 
@@ -36,7 +34,6 @@ describe('JobsService', () => {
     const app = moduleRef.createNestApplication();
     await app.init();
     close = () => app.close();
-    prisma = app.get(PrismaService);
     jobs = app.get(JobsService);
   });
 
