@@ -1,0 +1,45 @@
+Spear Systems — Aegros Software License Agreement
+
+Copyright (c) Spear Systems. All rights reserved.
+
+IMPORTANT — READ CAREFULLY BEFORE USING THIS SOFTWARE.
+
+1. Grant of license. Subject to this Agreement, Spear Systems grants you a
+   limited, non-exclusive, non-transferable, revocable license to install and
+   execute the Software (including official builds obtained from Spear Systems
+   or authorized registries such as npm) solely for your internal business
+   operations and/or evaluation, free of charge, unless otherwise agreed in
+   writing.
+
+2. Restrictions. You may not, without Spear Systems’ prior written consent:
+   (a) copy, distribute, sell, lease, lend, sublicense, or otherwise make the
+   Software available to third parties except as expressly permitted above;
+   (b) remove or alter any proprietary notices or labels on the Software;
+   (c) use the Software to provide a competing product or service, or to mirror
+   or redistribute the Software as a standalone offering;
+   (d) reverse engineer, decompile, or disassemble the Software except to the
+   extent mandatory applicable law permits.
+
+   Installation from an authorized package registry for use within your
+   organization is not “open source” and does not grant rights beyond this
+   Agreement. Title and intellectual property rights remain with Spear Systems.
+
+3. No warranty. THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+4. Limitation of liability. TO THE MAXIMUM EXTENT PERMITTED BY LAW, SPEAR
+   SYSTEMS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
+   CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS OR DATA, ARISING
+   FROM OR RELATED TO YOUR USE OF THE SOFTWARE.
+
+5. Termination. Spear Systems may terminate this Agreement if you breach it.
+   Upon termination, you must cease all use and destroy all copies of the
+   Software in your possession.
+
+6. General. This Agreement constitutes the entire agreement regarding the
+   Software. Spear Systems may update this Agreement for new releases; your
+   continued use may constitute acceptance. If any provision is held invalid,
+   the remainder remains in effect.
+
+For commercial redistribution, OEM, or enterprise terms, contact Spear Systems.

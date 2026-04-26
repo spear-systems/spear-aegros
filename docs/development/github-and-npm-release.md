@@ -24,10 +24,11 @@ This is the **maintainer checklist** for connecting the repo to **GitHub** and s
 
 ## C. First publish (manual path)
 
-From monorepo root after a green [testing-before-publish.md](./testing-before-publish.md) run:
+From monorepo root after a green [testing-before-publish.md](./testing-before-publish.md) run. Publish **`@spearsystems/aegros-core`** before **`@spearsystems/aegros`** so the umbrella’s dependency resolves on the registry:
 
 ```bash
 npm run build
+npm publish -w @spearsystems/aegros-core --tag beta
 npm publish -w @spearsystems/aegros --tag beta
 ```
 

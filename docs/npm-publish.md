@@ -16,14 +16,17 @@ So this repo keeps **`access: "public"`** only under `publishConfig`. You add **
 
 ## Prerelease (first beta)
 
-1. Bump version in **`packages/aegros/package.json`** (and align workspace packages + `AEGROS_CORE_VERSION` in `aegros-core` if you version them together; e.g. `0.1.0-beta.1`).
-2. From repo root: `npm run build` (runs workspace builds + umbrella `prepack` bundle).
-3. Inspect tarball: `npm pack -w @spearsystems/aegros` (or `npm run pack:dry` from root).
-4. Publish with a **dist-tag** so `latest` stays stable:
+`@spearsystems/aegros` depends on **`@spearsystems/aegros-core`** at the same version. **Publish the core package first** (or in the same release window) so global installs can resolve it from the registry:
 
 ```bash
+npm publish -w @spearsystems/aegros-core --tag beta
 npm publish -w @spearsystems/aegros --tag beta
 ```
+
+1. Bump version in **`packages/aegros/package.json`** and **`packages/aegros-core/package.json`** (and align other workspace packages + `AEGROS_CORE_VERSION` in `aegros-core/src/index.ts` if you keep them in lockstep; e.g. `0.1.0-beta.1`).
+2. From repo root: `npm run build` (runs workspace builds + umbrella `prepack` bundle).
+3. Inspect tarball: `npm pack -w @spearsystems/aegros` (or `npm run pack:dry` from root).
+4. Publish with a **dist-tag** so `latest` stays stable (commands above).
 
 5. Consumers: `npm i -g @spearsystems/aegros@beta` (or exact version).
 

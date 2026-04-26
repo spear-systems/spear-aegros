@@ -1,4 +1,4 @@
-import { cpSync, mkdirSync, rmSync, copyFileSync, existsSync } from 'node:fs';
+import { cpSync, mkdirSync, rmSync, copyFileSync, existsSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
@@ -34,8 +34,19 @@ mkdirSync(bundled, { recursive: true });
 
 copyDir(join(repoRoot, 'packages', 'aegros-core', 'dist'), join(bundled, 'core'));
 copyDir(join(repoRoot, 'packages', 'aegros-server', 'dist'), join(bundled, 'server'));
+writeFileSync(
+  join(bundled, 'server', 'package.json'),
+  JSON.stringify({ type: 'commonjs' }, null, 0),
+  'utf8',
+);
 copyDir(join(repoRoot, 'packages', 'aegros-cli', 'dist'), join(bundled, 'cli'));
+writeFileSync(
+  join(bundled, 'cli', 'package.json'),
+  JSON.stringify({ type: 'module' }, null, 0),
+  'utf8',
+);
 copyDir(join(repoRoot, 'packages', 'aegros-portal', 'dist'), join(bundled, 'portal'));
+copyDir(join(repoRoot, 'packages', 'aegros-server', 'prisma'), join(bundled, 'prisma'));
 
 for (const f of ['LICENSE', 'NOTICE']) {
   const src = join(repoRoot, f);

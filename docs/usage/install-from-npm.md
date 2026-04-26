@@ -17,7 +17,7 @@ The package **`@spearsystems/aegros`** is an **umbrella** release. Installing it
 | `aegros-server` | Starts the HTTP API (NestJS) and serves the operator **portal** static UI under `/portal/`. |
 | `aegros`        | CLI: `health`, `jobs create`, `jobs get`, `jobs watch`.                                     |
 
-The npm tarball contains **pre-built** server and CLI code plus the portal assets. It does **not** ship the Prisma **schema** or **migration SQL** files. You still need those files on disk once so you can create and migrate the database (see [section 4](#4-database-prisma-schema-and-migrations)).
+The npm tarball contains **pre-built** server and CLI code, the portal assets, and a **bundled copy of the Prisma schema and migrations** so `npm install` can run **`prisma generate`** and wire up **`@prisma/client`** for `aegros-server`. For **your** database, you still follow [section 4](#4-database-prisma-schema-and-migrations) (same files from GitHub or from the install tree) to set `DATABASE_URL` and run **`prisma migrate deploy`**.
 
 ---
 
@@ -61,6 +61,8 @@ npm -v
 npm install -g @spearsystems/aegros@beta
 ```
 
+npm pulls in **`@spearsystems/aegros-core`** at the matching version automatically. If install fails with “no matching version found” for core, publish or install core first (see maintainer [npm publish](../npm-publish.md)).
+
 To pin an exact version (recommended for reproducible servers):
 
 ```bash
@@ -74,7 +76,29 @@ aegros --version
 aegros-server --version
 ```
 
-On Windows, if the commands are not found, ensure your global npm **bin** directory is on `PATH` (npm prints it with `npm bin -g`).
+If you see **`command not found`**, the global npm **bin** directory is not on your shell **`PATH`** (common on Ubuntu when npm’s prefix is under your home directory).
+
+1. See where global binaries are installed:
+
+   ```bash
+   npm prefix -g
+   ls "$(npm prefix -g)/bin"
+   ```
+
+   You should see **`aegros`** and **`aegros-server`** there after `npm install -g`.
+
+2. Add that `bin` directory to **`PATH`** for your shell (example for bash on Ubuntu — adjust if you use zsh/fish):
+
+   ```bash
+   echo 'export PATH="$(npm prefix -g)/bin:$PATH"' >> ~/.bashrc
+   source ~/.bashrc
+   ```
+
+   Then run `aegros --version` again.
+
+3. **One-off** (current terminal only): `export PATH="$(npm prefix -g)/bin:$PATH"`.
+
+**Windows:** ensure the folder npm uses for global commands is on **`PATH`** (often **`%AppData%\npm`**). Run **`npm prefix -g`** — on Windows, shims are usually in that directory (not always a separate **`bin`** subfolder). Confirm with **`where.exe aegros`** after a successful global install.
 
 ### Updates
 
@@ -317,15 +341,15 @@ Never commit secrets or run the script where stdout is logged without redaction.
 
 ## 11. Troubleshooting
 
-| Symptom                                        | What to check                                                                                           |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `command not found: aegros-server`             | Global npm bin not on `PATH`; reinstall with `npm i -g` and follow npm’s PATH instructions for your OS. |
-| Server starts but health shows database errors | `DATABASE_URL` wrong; migrations not applied; file permissions on SQLite path.                          |
-| `P1001` / connection refused (Postgres)        | Network, credentials, TLS mode in URL, firewall.                                                        |
-| `.env` ignored                                 | You did not **`cd`** to the directory containing `.env` before `aegros-server`.                         |
-| CORS errors from the portal                    | `CORS_ORIGIN` must include the browser origin you use (scheme + host + port).                           |
-| `401` on API                                   | `API_KEYS_REQUIRED=true` but missing or wrong `X-API-Key` / `Authorization`.                            |
-| Permission errors on artifacts                 | Set **`AEGROS_ARTIFACTS_DIR`** to a writable absolute path.                                             |
+| Symptom                                        | What to check                                                                                                                              |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `command not found: aegros` / `aegros-server`  | Add **`$(npm prefix -g)/bin`** to **`PATH`** (see “Confirm the binaries” above); confirm files exist with **`ls "$(npm prefix -g)/bin"`**. |
+| Server starts but health shows database errors | `DATABASE_URL` wrong; migrations not applied; file permissions on SQLite path.                                                             |
+| `P1001` / connection refused (Postgres)        | Network, credentials, TLS mode in URL, firewall.                                                                                           |
+| `.env` ignored                                 | You did not **`cd`** to the directory containing `.env` before `aegros-server`.                                                            |
+| CORS errors from the portal                    | `CORS_ORIGIN` must include the browser origin you use (scheme + host + port).                                                              |
+| `401` on API                                   | `API_KEYS_REQUIRED=true` but missing or wrong `X-API-Key` / `Authorization`.                                                               |
+| Permission errors on artifacts                 | Set **`AEGROS_ARTIFACTS_DIR`** to a writable absolute path.                                                                                |
 
 For migrations and API key procedures in production, see **[Runbooks](../runbooks.md)**.
 
