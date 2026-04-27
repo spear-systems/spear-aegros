@@ -11,26 +11,17 @@ This project ships one package: `@spearsystems/aegros`.
 ## One-time setup
 
 - npm package exists and maintainer account has publish rights.
-- GitHub Actions has npm trusted publishing (OIDC) configured, or a fallback `NPM_TOKEN`.
+- GitHub repository secret `NPM_TOKEN` is configured (token-based publish).
 - Branch protection enabled on `main` and `release`.
 
-## Your current npm state (from beta)
+### Create `NPM_TOKEN` (automation token)
 
-If npm org still shows both:
-
-- `@spearsystems/aegros` (older beta metadata may still mention umbrella wording)
-- `@spearsystems/aegros-core`
-
-That is expected historically. For the RC line:
-
-- Keep publishing only `@spearsystems/aegros`.
-- Stop releasing new `@spearsystems/aegros-core` versions.
-- Do not remove old versions abruptly unless your org policy requires cleanup.
-- If desired later, deprecate old package line:
-
-```bash
-npm deprecate @spearsystems/aegros-core@"*" "Deprecated: functionality merged into @spearsystems/aegros"
-```
+1. Log in to npm as a package owner (`npm owner ls @spearsystems/aegros`).
+2. npm website -> account settings -> **Access Tokens** -> create **Automation** token.
+3. GitHub repo -> Settings -> Secrets and variables -> Actions -> New repository secret:
+   - Name: `NPM_TOKEN`
+   - Value: paste the npm automation token
+4. (Optional verify locally) `npm whoami`
 
 ## Prepare a release
 
@@ -61,6 +52,7 @@ The workflow derives npm tag from version:
 - `x.y.z-alpha.n` -> `alpha`
 
 You only need to bump `packages/aegros/package.json` version, then merge/push to `release`.
+After publish, the workflow moves `latest` to the same version.
 
 ## Make `.github/workflows/release.yml` work
 
@@ -68,11 +60,9 @@ Required checklist:
 
 1. Branch exists: `release`.
 2. Workflow file is on default branch (so GitHub can run it).
-3. npm trusted publisher is configured for this repo/package (recommended), **or** repository secret `NPM_TOKEN` is set.
+3. Repository secret `NPM_TOKEN` is set.
 4. Package version in `packages/aegros/package.json` is new (npm rejects republishing same version).
-5. GitHub Actions permissions allow:
-   - `id-token: write`
-   - `contents: write`
+5. GitHub Actions permissions allow `contents: write`.
 6. Repository allows pushing tags from workflow (`vX.Y.Z` / `vX.Y.Z-rc.N` / etc).
 
 Quick verification before trigger:
@@ -85,8 +75,73 @@ Then push to `release` (or run workflow_dispatch).
 
 Notes:
 
-- `npm publish --tag <tag>` already assigns the right dist-tag; the workflow does not do extra tag rewrites.
+- `npm publish --tag <tag>` assigns prerelease/stable tag; workflow then rewrites `latest` to this version.
 - Workflow uses a concurrency guard to avoid parallel duplicate publishes.
+
+## Publish locally (without GitHub Actions)
+
+Use this when CI publish is unavailable or you intentionally want a manual release.
+
+1. Ensure your npm user has publish rights:
+
+```bash
+npm whoami
+npm owner ls @spearsystems/aegros
+```
+
+2. Build and verify locally:
+
+```bash
+npm ci
+npm run build
+npm run lint
+npm run typecheck
+npm test
+npm run pack:dry
+```
+
+3. Publish with the correct tag:
+
+- Stable (`1.0.0`):
+
+  ```bash
+  npm publish -w @spearsystems/aegros --tag latest
+  ```
+
+- RC (`1.0.0-rc.1`):
+
+  ```bash
+  npm publish -w @spearsystems/aegros --tag rc
+  ```
+
+- Beta (`1.1.0-beta.1`):
+
+  ```bash
+  npm publish -w @spearsystems/aegros --tag beta
+  ```
+
+4. Verify tags:
+
+```bash
+npm view @spearsystems/aegros dist-tags --json
+```
+
+If newest version is not on `latest`, force it:
+
+```bash
+npm dist-tag add @spearsystems/aegros@1.0.0-rc.1 latest
+```
+
+5. Create and push matching git tag:
+
+```bash
+git tag v1.0.0-rc.1
+git push origin v1.0.0-rc.1
+```
+
+Notes:
+
+- Local publishes bypass CI safeguards; use only when needed.
 
 ## GitHub release
 
