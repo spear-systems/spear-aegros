@@ -93,3 +93,9 @@ spear-aegros --version
 ## Legal
 
 Use only on systems you are authorized to assess. Proprietary software; see `LICENSE`.
+
+## Community
+
+- Issues / bug reports: [github.com/spear-systems/spear-aegros/issues](https://github.com/spear-systems/spear-aegros/issues)
+- Security policy: [github.com/spear-systems/spear-aegros/security/policy](https://github.com/spear-systems/spear-aegros/security/policy)
+- Contributing guide: [github.com/spear-systems/spear-aegros/blob/main/docs/CONTRIBUTING.md](https://github.com/spear-systems/spear-aegros/blob/main/docs/CONTRIBUTING.md)

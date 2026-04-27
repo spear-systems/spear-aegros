@@ -11,9 +11,14 @@
     "attack-surface",
     "cli"
   ],
+  "homepage": "https://github.com/spear-systems/spear-aegros#readme",
+  "bugs": {
+    "url": "https://github.com/spear-systems/spear-aegros/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/spear-systems/spear-aegros.git"
+    "url": "git+https://github.com/spear-systems/spear-aegros.git",
+    "directory": "packages/aegros"
   },
   "bin": {
     "spear-aegros": "bin/spear-aegros.mjs"
