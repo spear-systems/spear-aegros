@@ -1,6 +1,6 @@
 {
   "name": "@spearsystems/aegros",
-  "version": "0.1.0-rc.1",
+  "version": "1.0.0",
   "description": "Spear Aegros is a security assessment and internet fingerprinting platform.",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",

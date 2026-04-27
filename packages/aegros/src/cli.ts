@@ -11,6 +11,7 @@ import {
   resetConfig,
   saveConfig,
   type AegrosConfig,
+  type IntegrationKeys,
   type ScanPolicy,
 } from './config.js';
 import {
@@ -73,6 +74,36 @@ function printHint(msg: string): void {
 
 function printInfo(msg: string): void {
   process.stderr.write(`${msg}\n`);
+}
+
+function redactIntegrationKeys(
+  keys: IntegrationKeys | undefined,
+): Partial<Record<keyof IntegrationKeys, string>> {
+  if (!keys) return {};
+  const out: Partial<Record<keyof IntegrationKeys, string>> = {};
+  for (const [integration, key] of Object.entries(keys)) {
+    if (!key) continue;
+    out[integration as keyof IntegrationKeys] = `${key.slice(0, 3)}***${key.slice(-2)}`;
+  }
+  return out;
+}
+
+function resolveIntegrationKeys(cfg: AegrosConfig): IntegrationKeys | undefined {
+  const fromConfig = cfg.integrationKeys ?? {};
+  const fromEnv: IntegrationKeys = {
+    virustotal: process.env.AEGROS_VIRUSTOTAL_API_KEY?.trim(),
+    'alienvault-otx': process.env.AEGROS_OTX_API_KEY?.trim(),
+    abuseipdb: process.env.AEGROS_ABUSEIPDB_API_KEY?.trim(),
+    safebrowsing: process.env.AEGROS_SAFEBROWSING_API_KEY?.trim(),
+  };
+  const merged: IntegrationKeys = {
+    virustotal: fromEnv['virustotal'] || fromConfig['virustotal'],
+    'alienvault-otx': fromEnv['alienvault-otx'] || fromConfig['alienvault-otx'],
+    abuseipdb: fromEnv['abuseipdb'] || fromConfig['abuseipdb'],
+    safebrowsing: fromEnv['safebrowsing'] || fromConfig['safebrowsing'],
+  };
+  if (!Object.values(merged).some(Boolean)) return undefined;
+  return merged;
 }
 
 async function getVersion(): Promise<string> {
@@ -231,7 +262,13 @@ async function run(): Promise<void> {
     .description('Print active configuration')
     .action(async () => {
       const cfg = await loadConfig();
-      printJson({ configPath: getConfigPath(), config: cfg });
+      printJson({
+        configPath: getConfigPath(),
+        config: {
+          ...cfg,
+          integrationKeys: redactIntegrationKeys(cfg.integrationKeys),
+        },
+      });
     });
 
   config
@@ -257,6 +294,10 @@ async function run(): Promise<void> {
     .option('--timeout-ms <number>', 'HTTP probe timeout (ms)')
     .option('--max-domains <number>', 'Cap number of domains processed')
     .option('--ack-authorized-use <bool>', 'Persist legal acknowledgement true|false')
+    .option('--virustotal-key <value>', 'VirusTotal API key')
+    .option('--otx-key <value>', 'AlienVault OTX API key')
+    .option('--abuseipdb-key <value>', 'AbuseIPDB API key')
+    .option('--safebrowsing-key <value>', 'Google Safe Browsing API key')
     .action(
       async (opts: {
         defaultPolicy?: string;
@@ -264,6 +305,10 @@ async function run(): Promise<void> {
         timeoutMs?: string;
         maxDomains?: string;
         ackAuthorizedUse?: string;
+        virustotalKey?: string;
+        otxKey?: string;
+        abuseipdbKey?: string;
+        safebrowsingKey?: string;
       }) => {
         const cfg = await loadConfig();
         const next = await saveConfig({
@@ -276,8 +321,30 @@ async function run(): Promise<void> {
             opts.ackAuthorizedUse === undefined
               ? cfg.ackAuthorizedUse
               : opts.ackAuthorizedUse.trim().toLowerCase() === 'true',
+          integrationKeys: {
+            virustotal:
+              opts.virustotalKey === undefined
+                ? cfg.integrationKeys?.['virustotal']
+                : opts.virustotalKey,
+            'alienvault-otx':
+              opts.otxKey === undefined ? cfg.integrationKeys?.['alienvault-otx'] : opts.otxKey,
+            abuseipdb:
+              opts.abuseipdbKey === undefined
+                ? cfg.integrationKeys?.['abuseipdb']
+                : opts.abuseipdbKey,
+            safebrowsing:
+              opts.safebrowsingKey === undefined
+                ? cfg.integrationKeys?.['safebrowsing']
+                : opts.safebrowsingKey,
+          },
         });
-        printJson({ configPath: getConfigPath(), config: next });
+        printJson({
+          configPath: getConfigPath(),
+          config: {
+            ...next,
+            integrationKeys: redactIntegrationKeys(next.integrationKeys),
+          },
+        });
       },
     )
     .addHelpText(
@@ -286,7 +353,8 @@ async function run(): Promise<void> {
         '  spear-aegros config show\n' +
         '  spear-aegros config set --default-policy standard --max-domains 50\n' +
         '  spear-aegros config set --output-dir ./reports --timeout-ms 12000\n' +
-        '  spear-aegros config set --ack-authorized-use true',
+        '  spear-aegros config set --ack-authorized-use true\n' +
+        '  spear-aegros config set --virustotal-key <key> --otx-key <key>',
     );
 
   const reports = program.command('reports').description('List and open saved JSON reports');
@@ -295,19 +363,72 @@ async function run(): Promise<void> {
     .command('list')
     .description('List reports (merges index.jsonl and on-disk JSON)')
     .option('--json', 'Machine-readable output')
-    .action(async (opts: { json?: boolean }) => {
+    .option('--limit <n>', 'Max reports to print', '50')
+    .option('--domain <value>', 'Filter reports containing domain')
+    .option('--policy <value>', 'Filter by policy')
+    .action(async (opts: { json?: boolean; limit?: string; domain?: string; policy?: string }) => {
       const cfg = await loadConfig();
-      const items = await mergeReportList(cfg.outputDir);
+      const limit = parseIntOption(opts.limit, 50);
+      let items = await mergeReportList(cfg.outputDir);
+      if (opts.domain?.trim()) {
+        const needle = opts.domain.trim().toLowerCase();
+        items = items.filter((entry) =>
+          entry.domains.some((domain) => domain.toLowerCase() === needle),
+        );
+      }
+      if (opts.policy === 'passive' || opts.policy === 'standard' || opts.policy === 'aggressive') {
+        const hits = [];
+        for (const entry of items) {
+          const resolved = await resolveReportPath(entry.id, cfg.outputDir);
+          if (resolved?.report.policy === opts.policy) hits.push(entry);
+        }
+        items = hits;
+      }
       if (opts.json) {
         printJson({ reportsDir: cfg.outputDir, items });
         return;
       }
-      for (const e of items.slice(0, 50)) {
+      for (const e of items.slice(0, limit)) {
         process.stdout.write(
           `${e.generatedAt}  ${e.id}  findings=${String(e.findings)}  ${e.path}\n`,
         );
       }
-      if (items.length > 50) process.stdout.write(`… and ${String(items.length - 50)} more\n`);
+      if (items.length > limit)
+        process.stdout.write(`… and ${String(items.length - limit)} more\n`);
+    });
+
+  reports
+    .command('latest')
+    .description('Print latest report summary')
+    .option('--json', 'Print latest full report JSON')
+    .action(async (opts: { json?: boolean }) => {
+      const cfg = await loadConfig();
+      const list = await mergeReportList(cfg.outputDir);
+      const latest = list[0];
+      if (!latest) {
+        process.stderr.write('No reports found.\n');
+        process.exitCode = 1;
+        return;
+      }
+      const hit = await resolveReportPath(latest.id, cfg.outputDir);
+      if (!hit) {
+        process.stderr.write('Latest report could not be read.\n');
+        process.exitCode = 1;
+        return;
+      }
+      if (opts.json) {
+        printJson(hit.report);
+        return;
+      }
+      printJson({
+        path: hit.path,
+        id: hit.report.id,
+        generatedAt: hit.report.generatedAt,
+        policy: hit.report.policy,
+        domains: hit.report.domains,
+        findings: hit.report.findings.length,
+        riskScore: hit.report.scoring?.overallRisk ?? null,
+      });
     });
 
   reports
@@ -365,12 +486,20 @@ async function run(): Promise<void> {
       if (cfg.maxDomains > 250) {
         issues.push('maxDomains is high; prefer <=250 to limit accidental broad scans.');
       }
+      const integrationKeys = resolveIntegrationKeys(cfg);
+      const configuredIntegrations = Object.entries(integrationKeys ?? {})
+        .filter(([, value]) => Boolean(value))
+        .map(([integration]) => integration);
       printJson({
         node: process.version,
         configPath: getConfigPath(),
         reportsDir: cfg.outputDir,
         indexPath: getReportsIndexPath(),
-        config: cfg,
+        config: {
+          ...cfg,
+          integrationKeys: redactIntegrationKeys(cfg.integrationKeys),
+        },
+        integrations: configuredIntegrations,
         issues,
         next: issues.length === 0 ? 'Ready' : 'Review issues',
       });
@@ -437,6 +566,7 @@ async function run(): Promise<void> {
 
       const timeoutMs = parseIntOption(opts.timeoutMs, cfg.timeoutMs);
       const maxDomains = parseIntOption(opts.maxDomains, cfg.maxDomains);
+      const integrationKeys = resolveIntegrationKeys(cfg);
 
       if (opts.tui) {
         await runTuiScan({
@@ -445,6 +575,7 @@ async function run(): Promise<void> {
           outputPath,
           timeoutMs,
           maxDomains,
+          integrationKeys,
           writeMarkdown: !opts.noMarkdown,
         });
         return;
@@ -459,6 +590,7 @@ async function run(): Promise<void> {
           outputPath,
           timeoutMs,
           maxDomains,
+          integrationKeys,
         },
         (event) => {
           if (event.kind === 'log') {
