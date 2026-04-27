@@ -51,8 +51,6 @@ jobs:
 
       - name: Publish package
         run: npm publish -w @spearsystems/aegros --tag ${{ steps.meta.outputs.publish_tag }} --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create git tag
         run: |
