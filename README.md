@@ -1,8 +1,8 @@
 # Spear Aegros
 
-`@spearsystems/aegros` is now a **single-package CLI** distribution for guided external attack-surface assessment.
+Spear Aegros is a security assessment and internet fingerprinting platform.
 
-This repository keeps source for that package only. Server/portal/core split packaging has been removed for this release-candidate line.
+`@spearsystems/aegros` is the platform CLI distribution. It provides guided assessment workflows, internet fingerprinting, and report-driven recommendations in one package.
 
 ## Install
 

@@ -1,6 +1,8 @@
 # `@spearsystems/aegros`
 
-Release candidate CLI for guided external attack-surface assessment.
+Spear Aegros is a security assessment and internet fingerprinting platform.
+
+This package is the platform CLI distribution: guided assessment workflows, internet fingerprinting, and report-driven recommendations in one install.
 
 ## Install
 

@@ -1,15 +1,13 @@
 {
   "name": "@spearsystems/aegros",
   "version": "0.1.0-rc.1",
-  "description": "Spear Aegros CLI for guided external surface assessments.",
+  "description": "Spear Aegros is a security assessment and internet fingerprinting platform.",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "keywords": [
     "spear",
     "aegros",
-    "security",
-    "attack-surface",
-    "cli"
+    "security"
   ],
   "homepage": "https://github.com/spear-systems/spear-aegros#readme",
   "bugs": {
