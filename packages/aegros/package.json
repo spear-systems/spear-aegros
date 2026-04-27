@@ -13,10 +13,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/spear-systems/spear-aegros.git"
+    "url": "git+https://github.com/spear-systems/spear-aegros.git"
   },
   "bin": {
-    "spear-aegros": "./bin/spear-aegros.mjs"
+    "spear-aegros": "bin/spear-aegros.mjs"
   },
   "files": [
     "bin",
