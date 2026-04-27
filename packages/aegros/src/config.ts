@@ -3,6 +3,9 @@ import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
 
 export type ScanPolicy = 'passive' | 'standard' | 'aggressive';
+export type OptionalIntegrationId = 'virustotal' | 'alienvault-otx' | 'abuseipdb' | 'safebrowsing';
+
+export type IntegrationKeys = Partial<Record<OptionalIntegrationId, string>>;
 
 export interface AegrosConfig {
   readonly defaultPolicy: ScanPolicy;
@@ -10,6 +13,7 @@ export interface AegrosConfig {
   readonly timeoutMs: number;
   readonly maxDomains: number;
   readonly ackAuthorizedUse: boolean;
+  readonly integrationKeys?: IntegrationKeys;
 }
 
 export const DEFAULT_CONFIG: AegrosConfig = {
@@ -39,12 +43,21 @@ function sanitizeConfig(input: Partial<AegrosConfig>): AegrosConfig {
       ? Math.round(input.maxDomains)
       : DEFAULT_CONFIG.maxDomains;
   const outputDir = input.outputDir?.trim() ? input.outputDir.trim() : DEFAULT_CONFIG.outputDir;
+  const integrationKeysInput = input.integrationKeys ?? {};
+  const integrationKeys: IntegrationKeys = {
+    virustotal: integrationKeysInput['virustotal']?.trim() || undefined,
+    'alienvault-otx': integrationKeysInput['alienvault-otx']?.trim() || undefined,
+    abuseipdb: integrationKeysInput['abuseipdb']?.trim() || undefined,
+    safebrowsing: integrationKeysInput['safebrowsing']?.trim() || undefined,
+  };
+  const hasIntegrationKeys = Object.values(integrationKeys).some(Boolean);
   return {
     defaultPolicy,
     outputDir,
     timeoutMs,
     maxDomains,
     ackAuthorizedUse: input.ackAuthorizedUse === true,
+    integrationKeys: hasIntegrationKeys ? integrationKeys : undefined,
   };
 }
 

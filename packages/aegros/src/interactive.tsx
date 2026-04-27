@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { render, Box, Text, useInput, useApp, useStdout } from 'ink';
 import TextInput from 'ink-text-input';
-import type { ScanPolicy } from './config.js';
+import type { IntegrationKeys, ScanPolicy } from './config.js';
 import { loadConfig } from './config.js';
 import {
   createDefaultReportPath,
@@ -77,6 +77,7 @@ export interface WizardStart {
   readonly outputPath: string;
   readonly timeoutMs: number;
   readonly maxDomains: number;
+  readonly integrationKeys?: IntegrationKeys;
 }
 
 function WizardFlow(props: { readonly onStart: (a: WizardStart) => void }): React.ReactElement {
@@ -172,6 +173,7 @@ function WizardFlow(props: { readonly onStart: (a: WizardStart) => void }): Reac
               outputPath: createDefaultReportPath(cfg.outputDir),
               timeoutMs: cfg.timeoutMs,
               maxDomains: cfg.maxDomains,
+              integrationKeys: cfg.integrationKeys,
             });
           }}
         />
@@ -228,6 +230,7 @@ function ScanRunner(props: {
             outputPath: props.run.outputPath,
             timeoutMs: props.run.timeoutMs,
             maxDomains: props.run.maxDomains,
+            integrationKeys: props.run.integrationKeys,
           },
           (ev) => {
             if (cancelled) return;

@@ -31,7 +31,7 @@ spear-aegros scan --tui --domain example.com --ack-authorized
 
 - `spear-aegros` / `spear-aegros interactive` — wizard + **Ink** UI, **collapsible activity log** (`l` / `Esc`), JSON + Markdown reports.
 - `spear-aegros scan --tui …` — same log panel for a one-shot scan from flags.
-- `spear-aegros scan` — DNS, HTTP fingerprint (headers / stack hints), security header findings; writes `report-*.json` + `.md`.
+- `spear-aegros scan` — deep DNS + email posture (SPF/DKIM/DMARC/BIMI/MTA-STS/TLS-RPT), HTTP fingerprint (headers / stack hints), security findings; writes `report-*.json` + `.md`.
 - `spear-aegros reports list` / `reports show <id>` — inspect saved reports.
 - `spear-aegros init` — readline guided config.
 - `spear-aegros config show|set|reset|path` — config management.
