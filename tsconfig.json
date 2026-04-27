@@ -1,9 +1,4 @@
 {
   "files": [],
-  "references": [
-    { "path": "./packages/aegros-core" },
-    { "path": "./packages/aegros-portal" },
-    { "path": "./packages/aegros-server" },
-    { "path": "./packages/aegros-cli" }
-  ]
+  "references": [{ "path": "./packages/aegros" }]
 }

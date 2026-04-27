@@ -1,21 +1,14 @@
-# Spear Aegros documentation
+# Spear Aegros Docs
 
-Documentation is split into two tracks:
+## User docs
 
-| Track                                      | Audience                             | Start here                                                                                                        |
-| ------------------------------------------ | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| **[Development](./development/README.md)** | Spear engineers / maintainers        | Local monorepo, CI, GitHub, npm releases, pre-publish checks, maintainer-only config                              |
-| **[Usage](./usage/README.md)**             | Anyone running or integrating Aegros | **[Install from npm](./usage/install-from-npm.md)** (primary), then configuration / CLI / portal / API references |
+- `usage/install-from-npm.md` - install, init config, run scans, upgrade and cleanup.
+- `usage/configuration.md` - complete config keys and command reference.
+- `usage/features.md` - capability map (interactive UX, fingerprinting, reporting).
 
-Supporting material (both tracks may reference):
+## Maintainer docs
 
-- [Architecture](./architecture.md) — packages and data flow
-- [Product scope](./product-scope.md) — roadmap traceability
-- [ADR 0001 — storage & queue](./adr/0001-storage-queue.md)
-- [Integrations](./integrations.md) — SARIF, webhooks
-- [Docker sidecar](./docker.md)
-- [Observability](./observability.md)
-- [Runbooks](./runbooks.md) — migrations, API keys, recovery
-- [Scanner license matrix](./scanner-license-matrix.md)
-- [Legal / safe use](./legal-safe-use.md)
-- [Contributing](./CONTRIBUTING.md) — PR expectations (links into Development)
+- `maintainers/release.md` - release branch workflow, GitHub release, npm publish.
+- `CONTRIBUTING.md` - contributor expectations and local checks.
+
+This docs set is intentionally streamlined for the CLI-only release candidate track.

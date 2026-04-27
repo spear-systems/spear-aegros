@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - release
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: release-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate quality gate
+        run: npm run build; npm run lint; npm run typecheck; npm test
+
+      - name: Resolve version and publish tag
+        id: meta
+        run: |
+          VERSION=$(node -p "require('./packages/aegros/package.json').version")
+          if [[ "$VERSION" == *"-"* ]]; then
+            PRE="${VERSION#*-}"
+            TAG="${PRE%%.*}"
+          else
+            TAG="latest"
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "publish_tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "Resolved version=${VERSION} publish_tag=${TAG}"
+
+      - name: Publish package
+        run: npm publish -w @spearsystems/aegros --tag ${{ steps.meta.outputs.publish_tag }} --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create git tag
+        run: |
+          TAG="v${{ steps.meta.outputs.version }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists; skipping."
+            exit 0
+          fi
+          git tag "$TAG"
+          git push origin "$TAG"

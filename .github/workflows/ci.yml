@@ -25,16 +25,6 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Rolldown (Vitest/Vite) + Rollup (Vite build): optional native deps often missing after npm ci in workspaces.
-      - name: Ensure Rolldown and Rollup native bindings
-        run: node scripts/ensure-native-bindings.mjs
-
-      # type-aware ESLint needs built workspace types (exports point at dist/) and generated Prisma client
-      - name: Prepare for lint (core dist + Prisma client)
-        run: npm run build -w @spearsystems/aegros-core && npm run db:generate -w @spearsystems/aegros-server
-        env:
-          DATABASE_URL: file:./packages/aegros-server/prisma/ci-placeholder.db
-
       - name: Lint
         run: npm run lint
 
@@ -43,10 +33,6 @@ jobs:
 
       - name: Typecheck
         run: npm run typecheck
-
-      # Re-apply in case any intermediate step touched node_modules (Vitest loads rolldown at startup).
-      - name: Ensure native bindings (pre-test)
-        run: node scripts/ensure-native-bindings.mjs
 
       - name: Test
         run: npm test

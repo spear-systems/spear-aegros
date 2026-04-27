@@ -1,51 +1,95 @@
-# `@spearsystems/aegros` (beta)
+# `@spearsystems/aegros`
 
-**Early beta** — breaking changes, incomplete features, not for production-critical workloads without review.
-
-Proprietary software © Spear Systems. See bundled **`LICENSE`**.
-
-## Documentation
-
-Usage and development guides live in the repo on GitHub (absolute links):
-
-**Usage (operators)**
-
-- [Install and run from npm (complete guide)](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/install-from-npm.md)
-- [Usage docs index](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/README.md)
-- [Configuration](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/configuration.md)
-- [CLI reference](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/cli.md)
-- [Portal](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/portal.md)
-- [HTTP API overview](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/api-overview.md)
-
-**Development (maintainers)**
-
-- [Development docs index](https://github.com/spear-systems/spear-aegros/blob/main/docs/development/README.md)
+Release candidate CLI for guided external attack-surface assessment.
 
 ## Install
 
 ```bash
-npm install -g @spearsystems/aegros@beta
-# or exact:
-npm install -g @spearsystems/aegros@0.1.0-beta.1
+npm install -g @spearsystems/aegros@latest
+spear-aegros --version
 ```
 
-## Binaries
+## Use (recommended)
 
-| Binary          | Purpose                                                           |
-| --------------- | ----------------------------------------------------------------- |
-| `aegros`        | CLI (`health`, `jobs create`, `jobs get`, `jobs watch`, `--json`) |
-| `aegros-server` | Starts Nest API + serves `/portal`                                |
+```bash
+spear-aegros
+```
 
-## Configure the server
+That opens the interactive wizard and performs scan + reporting.
 
-Follow [Install from npm](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/install-from-npm.md) for `.env` location, `DATABASE_URL`, migrations, and first start.
+## One-shot usage (non-interactive)
 
-Runtime settings are **your** environment (or process manager). Full variable list: [Configuration](https://github.com/spear-systems/spear-aegros/blob/main/docs/usage/configuration.md).
+```bash
+spear-aegros scan --domain example.com --ack-authorized
+spear-aegros scan --domains example.com,example.org --policy standard --ack-authorized
+spear-aegros scan --tui --domain example.com --ack-authorized
+```
 
-There is no Spear-managed cloud config for self-hosted installs. Environment template:
+## Command reference
 
-[`packages/aegros-server/.env.example`](https://github.com/spear-systems/spear-aegros/blob/main/packages/aegros-server/.env.example)
+- `spear-aegros` / `spear-aegros interactive` — wizard + **Ink** UI, **collapsible activity log** (`l` / `Esc`), JSON + Markdown reports.
+- `spear-aegros scan --tui …` — same log panel for a one-shot scan from flags.
+- `spear-aegros scan` — DNS, HTTP fingerprint (headers / stack hints), security header findings; writes `report-*.json` + `.md`.
+- `spear-aegros reports list` / `reports show <id>` — inspect saved reports.
+- `spear-aegros init` — readline guided config.
+- `spear-aegros config show|set|reset|path` — config management.
+- `spear-aegros doctor` — local setup checks.
+- `spear-aegros upgrade-help` — uninstall/reinstall flow.
 
-## Publish (maintainers only)
+Built-in help:
 
-[GitHub & npm release](https://github.com/spear-systems/spear-aegros/blob/main/docs/development/github-and-npm-release.md) · [npm publish](https://github.com/spear-systems/spear-aegros/blob/main/docs/npm-publish.md) — run `npm run build` at the monorepo root before `npm publish -w @spearsystems/aegros`.
+```bash
+spear-aegros --help
+spear-aegros scan --help
+spear-aegros config set --help
+spear-aegros reports --help
+```
+
+## Report storage
+
+By default reports are stored in:
+
+- `~/.spear-aegros/reports/`
+
+Each run writes:
+
+- JSON report (`report-*.json`)
+- Markdown summary (`report-*.md`)
+
+List and read later:
+
+```bash
+spear-aegros reports list
+spear-aegros reports show <report-id-or-path>
+```
+
+## Config keys
+
+Stored at `~/.spear-aegros/config.json`:
+
+- `defaultPolicy` (`passive|standard|aggressive`)
+- `outputDir`
+- `timeoutMs`
+- `maxDomains`
+- `ackAuthorizedUse`
+
+Examples:
+
+```bash
+spear-aegros config show
+spear-aegros config set --default-policy standard --max-domains 50
+spear-aegros config set --output-dir ./reports --timeout-ms 12000
+```
+
+## Migrate from older beta installs
+
+```bash
+npm uninstall -g @spearsystems/aegros
+npm cache verify
+npm install -g @spearsystems/aegros@latest
+spear-aegros --version
+```
+
+## Legal
+
+Use only on systems you are authorized to assess. Proprietary software; see `LICENSE`.
