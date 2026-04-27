@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: write
-  id-token: write
 
 concurrency:
   group: release-publish
@@ -50,7 +49,24 @@ jobs:
           echo "Resolved version=${VERSION} publish_tag=${TAG}"
 
       - name: Publish package
-        run: npm publish -w @spearsystems/aegros --tag ${{ steps.meta.outputs.publish_tag }} --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "NPM_TOKEN is required for token-based publishing."
+            exit 1
+          fi
+          npm publish -w @spearsystems/aegros --tag ${{ steps.meta.outputs.publish_tag }}
+
+      - name: Move latest tag to this release
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "NPM_TOKEN is required for dist-tag update."
+            exit 1
+          fi
+          npm dist-tag add @spearsystems/aegros@${{ steps.meta.outputs.version }} latest
 
       - name: Create git tag
         run: |
