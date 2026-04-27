@@ -101,12 +101,18 @@ export async function writeMarkdownSummary(report: ScanReport, mdPath: string): 
     `- **Generated:** ${report.generatedAt}`,
     `- **Policy:** ${report.policy}`,
     `- **Domains:** ${report.domains.join(', ')}`,
+    `- **Risk score:** ${report.scoring.overallRisk ?? 'n/a'}`,
     ``,
     `## Findings (${String(report.findings.length)})`,
     ``,
   ];
   for (const f of report.findings) {
-    lines.push(`### ${f.title}`, ``, `- **Severity:** ${f.severity}`, `- ${f.description}`, ``);
+    lines.push(`### ${f.title}`, ``, `- **Severity:** ${f.severity}`, `- ${f.description}`);
+    if (f.affectedAssets?.length) {
+      lines.push(`- **Affected assets:** ${f.affectedAssets.join(', ')}`);
+    }
+    if (f.remediation) lines.push(`- **Remediation:** ${f.remediation}`);
+    lines.push(``);
   }
   lines.push(`## Per-domain summary`, ``);
   for (const r of report.results) {
@@ -114,6 +120,59 @@ export async function writeMarkdownSummary(report: ScanReport, mdPath: string): 
     lines.push(`- **A:** ${r.dns.a.join(', ') || '—'}`);
     lines.push(`- **AAAA:** ${r.dns.aaaa.join(', ') || '—'}`);
     lines.push(`- **MX:** ${r.dns.mx.join(', ') || '—'}`);
+    if (r.dns.provider) lines.push(`- **DNS/Email provider hint:** ${r.dns.provider}`);
+    if (r.email) {
+      lines.push(`- **Email score:** ${String(r.email.score)}/100 (${r.email.spoofingRisk} risk)`);
+      lines.push(
+        `- **Email controls:** SPF=${r.email.hasSpf ? 'yes' : 'no'}, DKIM=${r.email.hasDkim ? 'yes' : 'no'}, DMARC=${r.email.hasDmarc ? 'yes' : 'no'}, BIMI=${r.email.hasBimi ? 'yes' : 'no'}, MTA-STS=${r.email.hasMtaSts ? 'yes' : 'no'}, TLS-RPT=${r.email.hasTlsRpt ? 'yes' : 'no'}`,
+      );
+      if (r.email.dkimWeakSelectors.length) {
+        lines.push(`- **Weak DKIM selectors:** ${r.email.dkimWeakSelectors.join(', ')}`);
+      }
+    }
+    if (r.subdomains?.discovered.length) {
+      lines.push(`- **Subdomains discovered:** ${String(r.subdomains.discovered.length)}`);
+      lines.push(`- **Subdomain sample:** ${r.subdomains.discovered.slice(0, 12).join(', ')}`);
+    }
+    if (r.tls) {
+      lines.push(
+        `- **TLS:** protocol=${r.tls.protocol ?? '—'} cipher=${r.tls.cipher ?? '—'} issuer=${r.tls.issuer ?? '—'}`,
+      );
+      if (r.tls.validTo) lines.push(`- **Cert expiry:** ${r.tls.validTo}`);
+      if (r.tls.san?.length)
+        lines.push(`- **Cert SAN sample:** ${r.tls.san.slice(0, 8).join(', ')}`);
+    }
+    if (r.delivery) {
+      lines.push(`- **CDN:** ${r.delivery.cdnProviders.join(', ') || '—'}`);
+      lines.push(`- **WAF:** ${r.delivery.wafProviders.join(', ') || '—'}`);
+    }
+    if (r.hosting) {
+      lines.push(
+        `- **Hosting:** ${r.hosting.ip} ${r.hosting.asn ?? ''} ${r.hosting.asnName ?? ''} ${r.hosting.country ?? ''}`.trim(),
+      );
+    }
+    if (r.ports) {
+      lines.push(`- **Open ports (aggressive):** ${r.ports.open.join(', ') || 'none'}`);
+    }
+    if (r.domainIntel) {
+      lines.push(`- **Domain status:** ${r.domainIntel.statuses.join(', ') || '—'}`);
+      if (r.domainIntel.expiresAt) lines.push(`- **Domain expiry:** ${r.domainIntel.expiresAt}`);
+    }
+    if (r.storageExposure?.length) {
+      const notable = r.storageExposure
+        .filter((entry) => entry.status === 200 || entry.status === 403)
+        .slice(0, 8);
+      if (notable.length) {
+        lines.push(
+          `- **Storage exposure sample:** ${notable.map((entry) => `${entry.provider}:${entry.variant}(${entry.status})`).join(', ')}`,
+        );
+      }
+    }
+    if (r.typosquatting?.variants.length) {
+      lines.push(
+        `- **Typosquatting variants:** ${r.typosquatting.variants.slice(0, 10).join(', ')}`,
+      );
+    }
     if (r.fingerprint) {
       lines.push(
         `- **Fingerprint:** ${r.fingerprint.finalUrl} (HTTP ${String(r.fingerprint.status ?? '—')})`,

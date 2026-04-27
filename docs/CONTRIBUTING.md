@@ -21,6 +21,7 @@ npm run build
 - One logical change per PR when possible.
 - CI must be green (lint, format, typecheck, test, build).
 - If CLI behavior changes, update `docs/usage/install-from-npm.md` and `docs/usage/configuration.md`.
+- If development workflow changes, update `docs/maintainers/develop.md`.
 - If release process changes, update `docs/maintainers/release.md`.
 
 ## Security

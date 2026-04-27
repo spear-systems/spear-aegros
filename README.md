@@ -7,7 +7,7 @@ Spear Aegros is a security assessment and internet fingerprinting platform.
 ## Install
 
 ```bash
-npm install -g @spearsystems/aegros@rc
+npm install -g @spearsystems/aegros@latest
 spear-aegros --version
 ```
 

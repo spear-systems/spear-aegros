@@ -1,6 +1,6 @@
 # Install from npm
 
-This guide is for end users of the CLI-only release candidate.
+This guide is for end users of the stable CLI release.
 
 ## 1) Requirements
 
@@ -17,7 +17,7 @@ npm -v
 ## 2) Install
 
 ```bash
-npm install -g @spearsystems/aegros@rc
+npm install -g @spearsystems/aegros@latest
 spear-aegros --version
 ```
 
@@ -87,7 +87,7 @@ Feature reference: `features.md`.
 
 ## 5) Update / remove / reinstall
 
-Update to newest RC:
+Update to newest stable:
 
 ```bash
 npm update -g @spearsystems/aegros
@@ -104,13 +104,13 @@ Reinstall clean:
 ```bash
 npm uninstall -g @spearsystems/aegros
 npm cache verify
-npm install -g @spearsystems/aegros@rc
+npm install -g @spearsystems/aegros@latest
 ```
 
 Pin exact version:
 
 ```bash
-npm install -g @spearsystems/aegros@0.1.0-rc.1
+npm install -g @spearsystems/aegros@1.0.0
 ```
 
 `npm` global install keeps one active version, so reinstall replaces older beta/rc versions.
@@ -122,7 +122,7 @@ If you previously installed beta builds (and especially if old command shims sti
 ```bash
 npm uninstall -g @spearsystems/aegros
 npm cache verify
-npm install -g @spearsystems/aegros@rc
+npm install -g @spearsystems/aegros@latest
 spear-aegros --version
 ```
 
@@ -131,7 +131,7 @@ Then verify no old command alias remains:
 - Linux/macOS: `which aegros` should return nothing (or an intentionally removed shim)
 - Windows: `where aegros` should return no active shim
 
-Only `spear-aegros` is supported in RC.
+Only `spear-aegros` is supported.
 
 ## 7) Helpful commands
 

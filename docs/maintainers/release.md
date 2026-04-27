@@ -26,7 +26,7 @@ This project ships one package: `@spearsystems/aegros`.
 ## Prepare a release
 
 1. Branch from `main` to `release`.
-2. Update version in `packages/aegros/package.json` (examples: `0.1.0-rc.1`, `0.1.0`, `0.2.0-beta.1`).
+2. Update version in `packages/aegros/package.json` (examples: `1.0.0`, `1.0.1`, `1.1.0-beta.1`).
 3. Run local quality gate:
 
 ```bash
@@ -40,6 +40,9 @@ npm run pack:dry
 ```
 
 4. Open PR into `release` and merge after review.
+
+For `v1.0.0-rc.1` and later, validate report consumers tolerate additive JSON blocks (`summary`, `scoring`, `infrastructureMap`, `integrations`) while preserving existing `schema@v2` fields.
+For current RC line updates, also validate additive domain intelligence blocks (for example `subdomains`, `tls`, `delivery`, `hosting`, and `ports`) are treated as optional by downstream consumers.
 
 ## Publish from `release`
 
@@ -145,19 +148,19 @@ Notes:
 
 ## GitHub release
 
-1. Tag commit from `release` (example `v0.1.0-rc.1` or `v0.1.0`).
+1. Tag commit from `release` (example `v1.0.0` or `v1.0.1`).
 2. Create GitHub Release from that tag.
 3. Include install and verification snippet:
 
 ```bash
-npm install -g @spearsystems/aegros@0.1.0-rc.1
+npm install -g @spearsystems/aegros@1.0.0
 spear-aegros --version
 ```
 
 ## Post-release smoke test
 
 ```bash
-npm install -g @spearsystems/aegros@0.1.0-rc.1
+npm install -g @spearsystems/aegros@1.0.0
 spear-aegros doctor
 spear-aegros scan --domain example.com --ack-authorized
 ```
